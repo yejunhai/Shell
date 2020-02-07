@@ -2,7 +2,6 @@
 #使用crontab 调用每3分钟一次，超过6分钟可以判断为SYN攻击
 
 #抓出处于SYN_RECV状态的IP地址 记录日志用于分析
-netstat -antp|grep "SYN_RECV"|awk '{print$5}'|awk -F":" '{print$1}'|sort|uniq >> $0_ip.log
 netstat -antp|grep "SYN_RECV"|awk -F '[ :]' '{print$27}'|sort|uniq >> $0_ip.log
 #分析日志找到大于2次被扫描到的IP地址，加入防火墙
 for ip in `cat $0_ip.log|sort|uniq -c|awk '{if($1>2) print$2}'`
