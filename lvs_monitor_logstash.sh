@@ -1,6 +1,6 @@
 #!/bin/bash
 #lvs结合ssh免密做监控，移除故障节点脚本
-
+. /etc/profile
 set -u
 set -e
 
@@ -27,9 +27,8 @@ delete_node(){
         echo "$ip:$port" >> $file.node #记录故障节点 用于add恢复
 }
 
-
-file=`echo "$0"|awk -F"." '{print$1}'` #日志文件名
 vip="192.168.29.4" #lvs的虚IP
+file=$(echo "$0"|awk -F"." '{print$1}') #日志文件名
 ip_info=$(ipvsadm -ln|grep -v $vip|awk  'NR>3{print$2}'|sort|uniq) #获取现有ipvs表的转发规则
 for ip_port in $ip_info; do
         ip=$(echo $ip_port|awk -F: '{print$1}') #切割获取IP
